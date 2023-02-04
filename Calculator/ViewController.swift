@@ -12,12 +12,38 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var displayLabel: UILabel!
     
+    private var isFinishedTypingNumber: Bool = true
     
+    private var displayValue: Double {
+        get {
+            guard let number = Double(displayLabel.text!) else {
+                fatalError()
+            }
+            return number
+        }
+    }
     
     @IBAction func calcButtonPressed(_ sender: UIButton) {
         
         //What should happen when a non-number button is pressed
-    
+        isFinishedTypingNumber = true
+        
+        if let calcMethod = sender.currentTitle {
+            if calcMethod == "+/-" {
+                let resultDouble = displayValue * -1
+                let resultInt = Int(displayValue * -1)
+                let resultIntToDouble = Double(resultInt)
+                if resultIntToDouble == resultDouble {
+                    displayLabel.text = String(resultInt)
+                } else {
+                    displayLabel.text = String(resultDouble)
+                }
+            } else if calcMethod == "AC" {
+                displayLabel.text = "0"
+            } else if calcMethod == "%" {
+                displayLabel.text = String(displayValue / 100.0)
+            }
+        }
     }
 
     
@@ -25,6 +51,34 @@ class ViewController: UIViewController {
         
         //What should happen when a number is entered into the keypad
     
+
+        if let numValue = sender.currentTitle {
+            if isFinishedTypingNumber {
+                if numValue == "." {
+                    displayLabel.text = "0" + numValue
+                    isFinishedTypingNumber = false
+                } else {
+                    displayLabel.text = numValue
+                    isFinishedTypingNumber = false
+                }
+            } else {
+                
+                if (numValue == "." && numValue.contains(".")) {
+//                    guard let currentDisplayLabel = Double(displayLabel.text!) else {
+//                        fatalError()
+//                    }
+//                    let isInt = floor(currentDisplayLabel) == currentDisplayLabel
+////                    displayLabel.text = "0" + numValue
+//                    if !isInt {
+                        return
+//                    }
+                    
+                }
+                displayLabel.text! += numValue
+            }
+            
+        }
+        
     }
 
 }
